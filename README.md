@@ -1,7 +1,6 @@
 # Hi there, I'm Stella 👋
 
-I'm a Master of Science in Business Intelligence candidate at HEC Montréal, passionate about transforming raw data into actionable insights. My focus is on the entire data lifecycle, from **ETL processes** and **data mining** to **analytics** and **visualization**. 
-
+I'm a Master of Science in Business Intelligence candidate at HEC Montréal, passionate about transforming raw data into actionable insights. My focus is on Fintech
 I'm also an entrepreneur at heart, exploring how data-driven strategies can build and grow a business. I'm always eager to learn new technologies and apply them to real-world challenges.
 
 * 🌱 I’m currently focused on creating diverse projects to show my skills and interests.
