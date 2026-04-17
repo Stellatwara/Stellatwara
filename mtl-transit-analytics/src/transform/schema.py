@@ -40,9 +40,9 @@ def build_schema(con: duckdb.DuckDBPyConnection | None = None) -> duckdb.DuckDBP
     if con is None:
         con = get_connection()
 
-    ridership_parquet = str(DATA_PROCESSED / "ridership_clean.parquet")
-    stops_parquet = str(DATA_PROCESSED / "stops_clean.parquet")
-    routes_parquet = str(DATA_PROCESSED / "routes_clean.parquet")
+    ridership_parquet = (DATA_PROCESSED / "ridership_clean.parquet").as_posix()
+    stops_parquet = (DATA_PROCESSED / "stops_clean.parquet").as_posix()
+    routes_parquet = (DATA_PROCESSED / "routes_clean.parquet").as_posix()
 
     logger.info("Building DuckDB schema in %s", DB_PATH)
 
@@ -130,7 +130,7 @@ def export_dim_tables(con: duckdb.DuckDBPyConnection) -> None:
 
     tables = ["dim_lines", "dim_stations", "dim_date", "fact_ridership"]
     for tbl in tables:
-        out = DATA_OUTPUT / f"{tbl}.csv"
+        out = (DATA_OUTPUT / f"{tbl}.csv").as_posix()
         con.execute(f"COPY {tbl} TO '{out}' (HEADER, DELIMITER ',')")
         count = con.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
         logger.info("  Exported %s → %s (%d rows)", tbl, out, count)

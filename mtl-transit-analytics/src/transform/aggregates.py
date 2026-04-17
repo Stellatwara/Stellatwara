@@ -132,7 +132,7 @@ def build_aggregates(con: duckdb.DuckDBPyConnection | None = None) -> duckdb.Duc
         count = con.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
         logger.info("  Built %-25s  %d rows", tbl, count)
 
-        out = DATA_OUTPUT / f"{tbl}.csv"
+        out = (DATA_OUTPUT / f"{tbl}.csv").as_posix()
         con.execute(f"COPY {tbl} TO '{out}' (HEADER, DELIMITER ',')")
         logger.info("    → exported to %s", out)
 

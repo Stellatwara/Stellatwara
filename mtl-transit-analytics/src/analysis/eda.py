@@ -49,7 +49,7 @@ def plot_monthly_trends(save: bool = True) -> plt.Figure:
     con = _con()
     df = con.execute("""
         SELECT year, month, line_id, line_name,
-               total_ridership / 1_000_000 AS ridership_M
+               total_ridership / 1000000 AS ridership_M
         FROM agg_monthly_line
         ORDER BY year, month, line_id
     """).df()
@@ -98,7 +98,7 @@ def plot_peak_vs_offpeak(save: bool = True) -> plt.Figure:
             line_id,
             line_name,
             is_peak,
-            SUM(ridership) / 1_000_000 AS ridership_M
+            SUM(ridership) / 1000000 AS ridership_M
         FROM agg_peak_summary
         GROUP BY year, line_id, line_name, is_peak
         ORDER BY year, line_id, is_peak
@@ -241,7 +241,7 @@ def plot_station_bar(save: bool = True) -> plt.Figure:
     """Horizontal bar chart of top-20 stations by total ridership."""
     con = _con()
     df = con.execute("""
-        SELECT station_name, line_id, total_ridership / 1_000_000 AS ridership_M
+        SELECT station_name, line_id, total_ridership / 1000000 AS ridership_M
         FROM agg_station_rank
         LIMIT 20
     """).df()

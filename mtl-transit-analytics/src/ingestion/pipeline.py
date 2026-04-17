@@ -5,8 +5,8 @@ End-to-end ingestion pipeline: fetch + clean in one call.
 import logging
 from pathlib import Path
 
-from fetch_data import fetch_all
-from clean_data import clean_all
+from src.ingestion.fetch_data import fetch_all
+from src.ingestion.clean_data import clean_all
 
 logger = logging.getLogger(__name__)
 

@@ -7,6 +7,7 @@ Outputs cleaned Parquet files to data/processed/.
 import logging
 from pathlib import Path
 
+import duckdb
 import pandas as pd
 import numpy as np
 
@@ -15,6 +16,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from config.settings import DATA_RAW, DATA_PROCESSED
 
 logger = logging.getLogger(__name__)
+
+
+def _write_parquet(df: pd.DataFrame, path: Path) -> None:
+    """Write a DataFrame to Parquet via DuckDB (no pyarrow needed)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    con = duckdb.connect()
+    con.register("_df", df)
+    con.execute(f"COPY _df TO '{path.as_posix()}' (FORMAT PARQUET)")
+    con.close()
 
 
 # ---------------------------------------------------------------------------
@@ -71,9 +81,9 @@ def clean_ridership(src: Path | None = None) -> pd.DataFrame:
     # Season
     df["season"] = df["month"].map(_month_to_season)
 
-    # Save
+    # Save — use DuckDB's native parquet writer (no pyarrow dependency)
     out = DATA_PROCESSED / "ridership_clean.parquet"
-    df.to_parquet(out, index=False)
+    _write_parquet(df, out)
     logger.info("Clean ridership saved to %s (%d rows)", out, len(df))
     return df
 
@@ -112,7 +122,7 @@ def clean_gtfs_stops(gtfs_dir: Path | None = None) -> pd.DataFrame:
     df = df.dropna(subset=["stop_lat", "stop_lon"])
 
     out = DATA_PROCESSED / "stops_clean.parquet"
-    df.to_parquet(out, index=False)
+    _write_parquet(df, out)
     logger.info("Clean stops saved to %s (%d rows)", out, len(df))
     return df
 
@@ -128,7 +138,7 @@ def clean_gtfs_routes(gtfs_dir: Path | None = None) -> pd.DataFrame:
     df.columns = [c.strip().lower() for c in df.columns]
 
     out = DATA_PROCESSED / "routes_clean.parquet"
-    df.to_parquet(out, index=False)
+    _write_parquet(df, out)
     logger.info("Clean routes saved to %s (%d rows)", out, len(df))
     return df
 
